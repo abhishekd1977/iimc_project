@@ -8,6 +8,9 @@
 library(shiny)
 library(DT)
 library(shinythemes)
+source("chooser.R")
+
+radioSelection <- textOutput("radioSelection")
 
 shinyUI(
   tagList(
@@ -18,49 +21,13 @@ shinyUI(
       tabPanel("Classification",
                mainPanel(
                  tabsetPanel(
-                   tabPanel("Data Selector",
-                            
-                            # Horizontal line ----
-                            tags$hr(),
-                            
-                            radioButtons("radio", label = h5("Use example data or upload your data:"),
-                                         choices = list("Load Example dataset" = 1, 
-                                                        "Upload your dataset" = 2), 
-                                         selected = 1),
-                            
-                            # Horizontal line ----
-                            tags$hr(),
-                            
-                            # Input: Select a file ----
-                            fileInput("file1", h5("Choose CSV File"),
-                                      multiple = TRUE,
-                                      accept = c("text/csv",
-                                                 "text/comma-separated-values,text/plain",
-                                                 ".csv")),
-                            
-                            # Horizontal line ----
-                            tags$hr(),
-                            
-                            # Input: Select separator ----
-                            radioButtons("sep", h5("Separator"),
-                                         choices = c(Comma = ",",
-                                                     Semicolon = ";",
-                                                     Tab = "\t"),
-                                         selected = ","),
-                            # Horizontal line ----
-                            tags$hr(),
-                            
-                            tabsetPanel(
-                              tabPanel("Data Snapshot", DT::dataTableOutput("contents")),
-                              tabPanel("Data Summary", verbatimTextOutput("summary"))
-                            )
-                   ),
-                   tabPanel("Logistic Regression", "This panel is intentionally left blank"),
-                   tabPanel("Naive Bayes Classifier", "This panel is intentionally left blank"),
-                   tabPanel("Neural Networks", "This panel is intentionally left blank"),
-                   tabPanel("SVM", "This panel is intentionally left blank"),
-                   tabPanel("Model Comparison", "This panel is intentionally left blank"),
-                   tabPanel("Prediction", "This panel is intentionally left blank")
+                   tabPanel("Data Selector", uiOutput("dataselector")),
+                   tabPanel("Model Configuration", uiOutput("fields")),
+                   tabPanel("Model Prediction", uiOutput("modelprediction")),
+                   tabPanel("Logistic Regression", uiOutput("fields.lr")),
+                   tabPanel("Naive Bayes", uiOutput("fields.nb")),
+                   tabPanel("Neural Networks", uiOutput("fields.nnet")),
+                   tabPanel("SVM", uiOutput("fields.svm"))
                  )
                )
       ),
