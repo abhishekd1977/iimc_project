@@ -142,7 +142,7 @@ function(input, output) {
   })
   #-----------------------------------------------------------------------------
   # ROC Curves
-  output$nPlotClassifierROC <- renderPlot({
+  roc <- eventReactive(input$actionTrain,{
     test_data <- getTestData(input)
     
     # Logistic Regression
@@ -184,7 +184,11 @@ function(input, output) {
            cex = 1.2, 
            text.col = "black", 
            horiz = F
-           )
+    )    
+  })
+  
+  output$nPlotClassifierROC <- renderPlot({
+    roc()
   })  
   #-----------------------------------------------------------------------------
   
