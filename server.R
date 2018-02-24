@@ -172,13 +172,19 @@ function(input, output) {
     pred_svm <- prediction(as.numeric(predict_svm), test_data[,dependentVar] )
     perf_svm <- performance(pred_svm,"tpr","fpr")
     
-    
     # Plots
     plot(perf_logistic, main = "ROC Curve", col = 'red', text.adj = c(-0.2,1.7))
     plot(perf_nb , add = TRUE, col = 'green')
     plot(perf_nnet , add = TRUE, col = 'blue')
-    plot(perf_svm , add = TRUE)
-    
+    plot(perf_svm , add = TRUE, col = 'black')
+    legend("bottomright", 
+           legend = c("Logistic", "Naive Bayes", "Neural Net", "SVM"),
+           col = c("red", "green", "blue", "black"),
+           pt.cex = 2, 
+           cex = 1.2, 
+           text.col = "black", 
+           horiz = F
+           )
   })  
   #-----------------------------------------------------------------------------
   
