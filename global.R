@@ -231,3 +231,36 @@ deriveInputControls <- function(input){
 }
 
 ##--------------------------------Model Prediction Ends-----------------------
+
+##--------------------------------Model Performance Starts--------------------
+# Logistic Regression Performance
+perf_logistic <- function(model, testData, dependentVar){
+  predict_logistic <- predict(model, newdata = testData ,type = 'response')
+  pred_logistic <- prediction(predict_logistic, testData[,dependentVar])
+  performance(pred_logistic, 'tpr', 'fpr')  
+}
+
+# Naive Bayes Performance
+perf_nb <- function(model, testData, dependentVar){
+  predict_nb <- predict(model, newdata = testData, type="raw")
+  predict_nb <- predict_nb[,2]  ## c(p0 , p1)
+  pred_nb <- prediction( predict_nb,  testData[,dependentVar])
+  performance(pred_nb,"tpr","fpr")
+}
+
+# NNet Performance
+perf_nnet <- function(model, testData, dependentVar){
+  predict_nnet <- predict(model, newdata = testData)
+  predict_nnet <- predict_nnet[,1]
+  pred_nnet <- prediction(predict_nnet, testData[,dependentVar] )
+  performance(pred_nnet,"tpr","fpr")
+}
+
+#SVM Performance
+perf_svm <- function(model, testData, dependentVar){
+  predict_svm <- predict(model, newdata = testData)
+  pred_svm <- prediction(as.numeric(predict_svm), testData[,dependentVar] )
+  performance(pred_svm,"tpr","fpr")
+}
+
+##--------------------------------Model Performance Ends--------------------
