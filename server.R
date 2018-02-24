@@ -12,6 +12,9 @@ library(e1071)
 library(caTools)
 library(nnet)
 library(mice)
+library(ROCR)
+library(ggplot2)
+library(plotROC)
 data(PimaIndiansDiabetes)
 source("chooser.R")
 
@@ -138,6 +141,46 @@ function(input, output) {
     svmModelTable()
   })
   #-----------------------------------------------------------------------------
+  # ROC Curves
+  output$nPlotClassifierROC <- renderPlot({
+    test_data <- getTestData(input)
+    
+    # Logistic Regression
+    classifier_logistic <- logitModel()
+    predict_logistic <- predict(classifier_logistic, newdata = test_data ,type = 'response')
+    dependentVar <- all.vars(classifier_logistic$formula)[1]
+    pred_logistic <- prediction(predict_logistic, test_data[,dependentVar])
+    perf_logistic <- performance(pred_logistic, 'tpr', 'fpr')
+    
+    # Naive Bayes
+    classifier_Nb <- naiveBayesModel()
+    predict_nb <- predict(classifier_Nb, newdata = test_data, type="raw")
+    predict_nb <- predict_nb[,2]  ## c(p0 , p1)
+    pred_nb <- prediction( predict_nb,  test_data[,dependentVar])
+    perf_nb <- performance(pred_nb,"tpr","fpr")
+    
+    #ANN
+    classifier_nnet <- nnetModel()
+    predict_nnet <- predict(classifier_nnet, newdata = test_data)
+    predict_nnet <- predict_nnet[,1]
+    pred_nnet <- prediction(predict_nnet, test_data[,dependentVar] )
+    perf_nnet <- performance(pred_nnet,"tpr","fpr")
+    
+    #SVM
+    classifier_svm <- svmModel()
+    predict_svm <- predict(classifier_svm, newdata = test_data)
+    pred_svm <- prediction(as.numeric(predict_svm), test_data[,dependentVar] )
+    perf_svm <- performance(pred_svm,"tpr","fpr")
+    
+    
+    # Plots
+    plot(perf_logistic, main = "ROC Curve", col = 'red', text.adj = c(-0.2,1.7))
+    plot(perf_nb , add = TRUE, col = 'green')
+    plot(perf_nnet , add = TRUE, col = 'blue')
+    plot(perf_svm , add = TRUE)
+    
+  })  
+  #-----------------------------------------------------------------------------
   
   #Data Selection Tab
   output$dataselector <- renderUI({
@@ -235,7 +278,7 @@ function(input, output) {
       fluidRow(
         tags$hr(),
         h4("Model Summary"),
-        plotOutput("nPlotLogistic")
+        plotOutput("nPlotClassifierROC")
       )
     )
   })
