@@ -31,7 +31,7 @@ function(input, output) {
               h4("Model Summary"),
               tableOutput("logitTable"),
               tags$br(),
-              tableOutput("nTextLogistic")
+              DT::dataTableOutput("nTextLogistic")
           )
       )
   })
@@ -68,7 +68,7 @@ function(input, output) {
   
   #This shows all the contents(Train + Test) from the dataset
   output$contents <- DT::renderDataTable({
-      DT::datatable(selectData(input))
+      DT::datatable(selectData(input), selection = c("none"))
   })
   
   #This shows summary of all the contents(Train + Test) from the dataset
@@ -93,8 +93,10 @@ function(input, output) {
       plot(logitModel())
   })
   
-  output$nTextLogistic <- renderTable({
-    logitModelCoeff()
+  output$nTextLogistic <- DT::renderDataTable({
+    DT::datatable(logitModelCoeff(), rownames = TRUE, 
+                  options = list(bLengthChange=0, bFilter=0),
+                  selection = c("none"))
   })
 
   #Confusion Matrix for Logistic
@@ -172,6 +174,18 @@ function(input, output) {
   
   output$nPlotClassifierROC <- renderPlot({
     roc()
+  })
+  
+  # Model Performance Comparison
+  performanceTable <- eventReactive(input$actionTrain,{
+    test_data <- getTestData(input)
+    dependentVar <- input$in2
+    
+    # Logistic Regression Performance
+    perf_logistic <- perf_logistic(logitModel(), test_data, dependentVar)
+    
+    
+    
   })  
   #-----------------------------------------------------------------------------
   
