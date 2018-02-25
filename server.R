@@ -159,18 +159,22 @@ function(input, output) {
     perf_svm <- perf_svm(svmModel(), test_data, dependentVar)
 
     # Plots
-    plot(perf_logistic, main = "ROC Curve", col = 'red', text.adj = c(-0.2,1.7))
-    plot(perf_nb , add = TRUE, col = 'green')
-    plot(perf_nnet , add = TRUE, col = 'blue')
-    plot(perf_svm , add = TRUE, col = 'black')
+    #par(pty = "s")
+    plot(perf_logistic, main = "ROC Curve", col = 'red', ltw = 2)
+    plot(perf_nb , add = TRUE, col = 'green', ltw = 2)
+    plot(perf_nnet , add = TRUE, col = 'blue', ltw = 2)
+    plot(perf_svm , add = TRUE, col = 'magenta', ltw = 2)
+    grid(nx = NULL, ny = NULL, col ="white", lty ="dotted")
+    
     legend("bottomright", 
            legend = c("Logistic", "Naive Bayes", "Neural Net", "SVM"),
-           col = c("red", "green", "blue", "black"),
+           col = c("red", "green", "blue", "magenta"),
            pt.cex = 2, 
-           cex = 1.2, 
+           cex = 1.1, 
            text.col = "black", 
+           lty = c(1,1,1,1),
            horiz = F
-    )    
+    )
   })
   
   output$nPlotClassifierROC <- renderPlot({
