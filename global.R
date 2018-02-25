@@ -240,70 +240,89 @@ deriveInputControls <- function(input){
 
 ##--------------------------------Model Performance Starts--------------------
 # Logistic Regression Performance
-perf_logistic <- function(model, testData, dependentVar){
+perf_logistic <- function(model, testData, dependentVar, measure, x.measure){
   predict_logistic <- predict(model, newdata = testData ,type = 'response')
   pred_logistic <- prediction(predict_logistic, testData[,dependentVar])
-  performance(pred_logistic, 'tpr', 'fpr')  
+  
+  #perf_auc <- performance(pred_logistic, measure="auc", x.measure = "none")
+  #print(paste0("Logistic AUC=",perf_auc@y.values[[1]]))
+  
+  performance(pred_logistic, measure, x.measure)  
 }
 
 # Naive Bayes Performance
-perf_nb <- function(model, testData, dependentVar){
+perf_nb <- function(model, testData, dependentVar, measure, x.measure){
   predict_nb <- predict(model, newdata = testData, type="raw")
   predict_nb <- predict_nb[,2]  ## c(p0 , p1)
   pred_nb <- prediction( predict_nb,  testData[,dependentVar])
-  performance(pred_nb,"tpr","fpr")
+  performance(pred_nb, measure, x.measure)
 }
 
 # NNet Performance
-perf_nnet <- function(model, testData, dependentVar){
+perf_nnet <- function(model, testData, dependentVar, measure, x.measure){
   predict_nnet <- predict(model, newdata = testData)
   predict_nnet <- predict_nnet[,1]
   pred_nnet <- prediction(predict_nnet, testData[,dependentVar] )
-  performance(pred_nnet,"tpr","fpr")
+  performance(pred_nnet, measure, x.measure)
 }
 
 #SVM Performance
-perf_svm <- function(model, testData, dependentVar){
+perf_svm <- function(model, testData, dependentVar, measure, x.measure){
   predict_svm <- predict(model, newdata = testData)
   pred_svm <- prediction(as.numeric(predict_svm), testData[,dependentVar] )
-  performance(pred_svm,"tpr","fpr")
+  performance(pred_svm, measure, x.measure)
 }
 
 performanceTable <- function(input){
   y <- data.frame()
   
+  test_data <- getTestData(input)
+  dependentVar <- input$in2
+  
   logit.TP <- predict.logit.fulldata(input)["1","1"]
   logit.FP <- predict.logit.fulldata(input)["1","0"]
   logit.TN <- predict.logit.fulldata(input)["0","0"]
   logit.FN <- predict.logit.fulldata(input)["0","1"]  
+  logit.perf.auc <- perf_logistic(logitFunc(input), test_data, dependentVar, "auc", "none")
+  logit.auc <- logit.perf.auc@y.values[[1]]
   
   naivebayes.TP <- predict.naivebayes.fulldata(input)["1","1"]
   naivebayes.FP <- predict.naivebayes.fulldata(input)["1","0"]
   naivebayes.TN <- predict.naivebayes.fulldata(input)["0","0"]
   naivebayes.FN <- predict.naivebayes.fulldata(input)["0","1"] 
+  naivebayes.perf.auc <- perf_nb(naiveBayesFunc(input), test_data, dependentVar, "auc", "none")
+  naivebayes.auc <- naivebayes.perf.auc@y.values[[1]]
   
   nnet.TP <- predict.nnet.fulldata(input)["1","1"]
   nnet.FP <- predict.nnet.fulldata(input)["1","0"]
   nnet.TN <- predict.nnet.fulldata(input)["0","0"]
   nnet.FN <- predict.nnet.fulldata(input)["0","1"] 
+  nnet.perf.auc <- perf_nnet(nnetFunc(input), test_data, dependentVar, "auc", "none")
+  nnet.auc <- nnet.perf.auc@y.values[[1]]
   
   svm.TP <- predict.svm.fulldata(input)["1","1"]
   svm.FP <- predict.svm.fulldata(input)["1","0"]
   svm.TN <- predict.svm.fulldata(input)["0","0"]
   svm.FN <- predict.svm.fulldata(input)["0","1"]
+  svm.perf.auc <- perf_svm(svmFunc(input), test_data, dependentVar, "auc", "none")
+  svm.auc <- svm.perf.auc@y.values[[1]]
   
+  y["AUC", "Logistic"] <- round(logit.auc, digits = 3)
   y["Accuracy", "Logistic"] <- round( ((logit.TP + logit.TN) / (logit.TP + logit.FP + logit.TN + logit.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "Logistic"] <- round((logit.TP / (logit.TP+logit.FP)), digits = 3)
   y["True Negative Rate/Specificity", "Logistic"] <- round((logit.TN / (logit.TN + logit.FN)), digits = 3)
   
+  y["AUC", "Naive Bayes"] <- round(naivebayes.auc, digits = 3)
   y["Accuracy", "Naive Bayes"] <- round( ((naivebayes.TP + naivebayes.TN) / (naivebayes.TP + naivebayes.FP + naivebayes.TN + naivebayes.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "Naive Bayes"] <- round((naivebayes.TP / (naivebayes.TP + naivebayes.FP)), digits = 3)
   y["True Negative Rate/Specificity", "Naive Bayes"] <- round((naivebayes.TN / (naivebayes.TN + naivebayes.FN)), digits = 3)  
 
+  y["AUC", "Neural Networks"] <- round(nnet.auc, digits = 3)
   y["Accuracy", "Neural Networks"] <- round( ((nnet.TP + nnet.TN) / (nnet.TP + nnet.FP + nnet.TN + nnet.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "Neural Networks"] <- round((nnet.TP / (nnet.TP + nnet.FP)), digits = 3)
   y["True Negative Rate/Specificity", "Neural Networks"] <- round((nnet.TN / (nnet.TN + nnet.FN)), digits = 3)  
   
+  y["AUC", "SVM"] <- round(svm.auc, digits = 3)
   y["Accuracy", "SVM"] <- round( ((svm.TP + svm.TN) / (svm.TP + svm.FP + svm.TN + svm.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "SVM"] <- round((svm.TP / (svm.TP + svm.FP)), digits = 3)
   y["True Negative Rate/Specificity", "SVM"] <- round((svm.TN / (svm.TN + svm.FN)), digits = 3)    
