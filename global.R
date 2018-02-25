@@ -139,31 +139,35 @@ svmFunc <- function(input){
 }
 
 #Confusion Matrix for Naive Bayes
-predict.naivebayes.fulldata <- function(input, outcome){
+predict.naivebayes.fulldata <- function(input){
     test.data <- getTestData(input)
+    outcome <- input$in2
     naivebayes.predicted.fulldata <- predict(naiveBayesFunc(input), test.data)
     table(naivebayes.predicted.fulldata, test.data[,outcome], dnn = c("Predicted", "Actual"))
 }
 
 #Confusion Matrix for Logistic
-predict.logit.fulldata <- function(input, outcome){
+predict.logit.fulldata <- function(input){
   test.data <- getTestData(input)
+  outcome <- input$in2
   logit.predicted.fulldata <- predict(logitFunc(input), test.data)
   logit.predicted.fulldata <- ifelse(logit.predicted.fulldata < 0.7, 0, 1)
   table(logit.predicted.fulldata, test.data[,outcome], dnn = c("Predicted", "Actual"))
 }
 
 #Confusion Matrix for Neural Networks
-predict.nnet.fulldata <- function(input, outcome){
+predict.nnet.fulldata <- function(input){
   test.data <- getTestData(input)
+  outcome <- input$in2
   nnet.predicted.fulldata <- predict(nnetFunc(input), test.data)
   nnet.predicted.fulldata <- ifelse(nnet.predicted.fulldata < 0.7, 0, 1)
   table(nnet.predicted.fulldata, test.data[,outcome], dnn = c("Predicted", "Actual"))
 }
 
 #Confusion Matrix for SVM
-predict.svm.fulldata <- function(input, outcome){
+predict.svm.fulldata <- function(input){
   test.data <- getTestData(input)
+  outcome <- input$in2
   svm.predicted.fulldata <- predict(svmFunc(input), test.data)
   #svm.predicted.fulldata <- ifelse(svm.predicted.fulldata < 0.7, 0, 1)
   table(svm.predicted.fulldata, test.data[,outcome], dnn = c("Predicted", "Actual"))
@@ -263,4 +267,9 @@ perf_svm <- function(model, testData, dependentVar){
   performance(pred_svm,"tpr","fpr")
 }
 
+performanceTable <- function(modelPerformance){
+  y <- data.frame()
+  y["Accuracy", "Logistic"] <- 0.9
+  y["Error", "Logistic"] <- 0.08
+}
 ##--------------------------------Model Performance Ends--------------------
