@@ -150,13 +150,13 @@ function(input, output) {
     dependentVar <- input$in2
       
     # Logistic Regression Performance
-    perf_logistic <- perf_logistic(logitModel(), test_data, dependentVar)
+    perf_logistic <- perf_logistic(logitModel(), test_data, dependentVar, "tpr", "fpr")
     # Naive Bayes Performance
-    perf_nb <- perf_nb(naiveBayesModel(), test_data, dependentVar)
+    perf_nb <- perf_nb(naiveBayesModel(), test_data, dependentVar, "tpr", "fpr")
     #Neural Network Performance
-    perf_nnet <- perf_nnet(nnetModel(), test_data, dependentVar)
+    perf_nnet <- perf_nnet(nnetModel(), test_data, dependentVar, "tpr", "fpr")
     #SVM Performance
-    perf_svm <- perf_svm(svmModel(), test_data, dependentVar)
+    perf_svm <- perf_svm(svmModel(), test_data, dependentVar, "tpr", "fpr")
 
     # Plots
     #par(pty = "s")
