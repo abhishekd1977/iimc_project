@@ -86,7 +86,7 @@ function(input, output) {
   })
   
   logitModelTable <- eventReactive(input$actionTrain, {
-    as.data.frame(predict.logit.fulldata(input, input$in2))
+    as.data.frame(predict.logit.fulldata(input))
   })
   
   output$nPlotLogistic <- renderPlot({
@@ -109,7 +109,7 @@ function(input, output) {
   })
  
   naiveBayesModelTable <- eventReactive(input$actionTrain, {
-    as.data.frame(predict.naivebayes.fulldata(input, input$in2))
+    as.data.frame(predict.naivebayes.fulldata(input))
   })
   
   #Confusion Matrix for Naive Bayes
@@ -122,7 +122,7 @@ function(input, output) {
   })
   
   nnetModelTable <- eventReactive(input$actionTrain, {
-    as.data.frame(predict.nnet.fulldata(input, input$in2))
+    as.data.frame(predict.nnet.fulldata(input))
   })  
   
   #Confusion Matrix for Neural Networks
@@ -135,7 +135,7 @@ function(input, output) {
   })
   
   svmModelTable <- eventReactive(input$actionTrain, {
-    as.data.frame(predict.svm.fulldata(input, input$in2))
+    as.data.frame(predict.svm.fulldata(input))
   })  
   
   #Confusion Matrix for SVM
