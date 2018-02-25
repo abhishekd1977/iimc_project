@@ -7,17 +7,19 @@ selectData <- function (input){
         df <- read.csv(input$file1$datapath, sep = ",", stringsAsFactors = FALSE)
         df
     }else{
-        PimaIndiansDiabetes
+        df <- PimaIndiansDiabetes
+        levels(df[, "diabetes"])[levels(df[, "diabetes"])=="pos"] <- "1"
+        levels(df[, "diabetes"])[levels(df[, "diabetes"])=="neg"] <- "0"
+        df
     }
 }
-
 
 #Step 2: Data Pre-Processing [Convert into factors]
 convertToFactors <- function(inputData, input){
   ### Convert outcome variable to a factor
-  factor_variables <- input$in2
-  inputData[factor_variables] <- lapply(inputData[factor_variables], function(x) as.factor(x))
-  
+  outcome <- input$in2
+  inputData[outcome] <- lapply(inputData[outcome], function(x) as.factor(x))
+
   #Convert all data frame character columns to factors. [Is this right thing to do?]
   inputData[sapply(inputData, is.character)] <- lapply(inputData[sapply(inputData, is.character)], as.factor)  
   
