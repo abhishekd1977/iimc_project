@@ -311,21 +311,29 @@ performanceTable <- function(input){
   y["Accuracy", "Logistic"] <- round( ((logit.TP + logit.TN) / (logit.TP + logit.FP + logit.TN + logit.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "Logistic"] <- round((logit.TP / (logit.TP+logit.FP)), digits = 3)
   y["True Negative Rate/Specificity", "Logistic"] <- round((logit.TN / (logit.TN + logit.FN)), digits = 3)
+  y["False Positive Rate", "Logistic"] <- round(1- (logit.TN / (logit.TN + logit.FN)), digits = 3)
+  y["False Negative Rate", "Logistic"] <- round(1-(logit.TP / (logit.TP+logit.FP)), digits = 3)
   
   y["AUC", "Naive Bayes"] <- round(naivebayes.auc, digits = 3)
   y["Accuracy", "Naive Bayes"] <- round( ((naivebayes.TP + naivebayes.TN) / (naivebayes.TP + naivebayes.FP + naivebayes.TN + naivebayes.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "Naive Bayes"] <- round((naivebayes.TP / (naivebayes.TP + naivebayes.FP)), digits = 3)
   y["True Negative Rate/Specificity", "Naive Bayes"] <- round((naivebayes.TN / (naivebayes.TN + naivebayes.FN)), digits = 3)  
-
+  y["False Positive Rate", "Naive Bayes"] <- round(1-(naivebayes.TN / (naivebayes.TN + naivebayes.FN)), digits = 3)
+  y["False Negative Rate", "Naive Bayes"] <- round(1-(naivebayes.TP / (naivebayes.TP + naivebayes.FP)), digits = 3)
+  
   y["AUC", "Neural Networks"] <- round(nnet.auc, digits = 3)
   y["Accuracy", "Neural Networks"] <- round( ((nnet.TP + nnet.TN) / (nnet.TP + nnet.FP + nnet.TN + nnet.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "Neural Networks"] <- round((nnet.TP / (nnet.TP + nnet.FP)), digits = 3)
   y["True Negative Rate/Specificity", "Neural Networks"] <- round((nnet.TN / (nnet.TN + nnet.FN)), digits = 3)  
+  y["False Positive Rate", "Neural Networks"] <- round(1-(nnet.TN / (nnet.TN + nnet.FN)), digits = 3)
+  y["False Negative Rate", "Neural Networks"] <- round(1-(nnet.TP / (nnet.TP + nnet.FP)), digits = 3)
   
   y["AUC", "SVM"] <- round(svm.auc, digits = 3)
   y["Accuracy", "SVM"] <- round( ((svm.TP + svm.TN) / (svm.TP + svm.FP + svm.TN + svm.FN)), digits = 3) 
   y["True Positive Rate/Sensitivity", "SVM"] <- round((svm.TP / (svm.TP + svm.FP)), digits = 3)
   y["True Negative Rate/Specificity", "SVM"] <- round((svm.TN / (svm.TN + svm.FN)), digits = 3)    
+  y["False Positive Rate", "SVM"] <- round(1-(svm.TN / (svm.TN + svm.FN)), digits = 3)
+  y["False Negative Rate", "SVM"] <- round(1-(svm.TP / (svm.TP + svm.FP)), digits = 3)
   
   y
 }
