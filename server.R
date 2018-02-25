@@ -15,6 +15,7 @@ library(mice)
 library(ROCR)
 library(ggplot2)
 library(plotROC)
+library(plyr)
 data(PimaIndiansDiabetes)
 source("chooser.R")
 
