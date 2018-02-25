@@ -29,9 +29,10 @@ function(input, output) {
   output$fields.lr <- renderUI({
       fluidPage(
           fluidRow(
-              h4("Model Summary"),
-              tableOutput("logitTable"),
+              h4("Contingency Table"),
+              DT::dataTableOutput("logitTable"),
               tags$br(),
+              h4("Regression Co-efficients"),
               DT::dataTableOutput("nTextLogistic")
           )
       )
@@ -41,8 +42,8 @@ function(input, output) {
   output$fields.nb <- renderUI({
       fluidPage(
           fluidRow(
-              h4("Model Summary"),
-              tableOutput("naiveBayesTable")
+            h4("Contingency Table"),
+            DT::dataTableOutput("naiveBayesTable")
           )
       )
   })  
@@ -51,8 +52,8 @@ function(input, output) {
   output$fields.nnet <- renderUI({
       fluidPage(
           fluidRow(
-              h4("Model Summary"),
-              tableOutput("nnetTable")
+              h4("Contingency Table"),
+              DT::dataTableOutput("nnetTable")
           )
       )
   })
@@ -61,8 +62,8 @@ function(input, output) {
   output$fields.svm <- renderUI({
     fluidPage(
       fluidRow(
-        h4("Model Summary"),
-        tableOutput("svmTable")
+        h4("Contingency Table"),
+        DT::dataTableOutput("svmTable")
       )
     )
   })  
@@ -99,10 +100,12 @@ function(input, output) {
                   options = list(bLengthChange=0, bFilter=0),
                   selection = c("none"))
   })
-
+  
   #Confusion Matrix for Logistic
-  output$logitTable <- renderTable({
-    logitModelTable()
+  output$logitTable <- DT::renderDataTable({
+    DT::datatable(logitModelTable(), rownames = FALSE, 
+                  options = list(dom = 't'),
+                  selection = c("none"))
   })
   ##-------------------------------------------------  
   naiveBayesModel <- eventReactive(input$actionTrain, {
@@ -114,9 +117,11 @@ function(input, output) {
   })
   
   #Confusion Matrix for Naive Bayes
-  output$naiveBayesTable <- renderTable({
-    naiveBayesModelTable()
-  })
+  output$naiveBayesTable <- DT::renderDataTable({
+    DT::datatable(naiveBayesModelTable(), rownames = FALSE, 
+                  options = list(dom = 't'),
+                  selection = c("none"))
+  })  
   ##---------------------------------------------------
   nnetModel <- eventReactive(input$actionTrain, {
       nnetFunc(input)
@@ -127,8 +132,10 @@ function(input, output) {
   })  
   
   #Confusion Matrix for Neural Networks
-  output$nnetTable <- renderTable({
-    nnetModelTable()
+  output$nnetTable <- DT::renderDataTable({
+    DT::datatable(nnetModelTable(), rownames = FALSE, 
+                  options = list(dom = 't'),
+                  selection = c("none"))
   })
   #-----------------------------------------------------------------------------
   svmModel <- eventReactive(input$actionTrain, {
@@ -140,9 +147,11 @@ function(input, output) {
   })  
   
   #Confusion Matrix for SVM
-  output$svmTable <- renderTable({
-    svmModelTable()
-  })
+  output$svmTable <- DT::renderDataTable({
+    DT::datatable(svmModelTable(), rownames = FALSE, 
+                  options = list(dom = 't'),
+                  selection = c("none"))
+  })  
   #-----------------------------------------------------------------------------
   # ROC Curves
   roc <- eventReactive(input$actionTrain,{
