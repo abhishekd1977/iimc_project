@@ -271,25 +271,42 @@ perf_svm <- function(model, testData, dependentVar){
 
 performanceTable <- function(input){
   y <- data.frame()
-  y["True Positives", "Logistic"] <- predict.logit.fulldata(input)["1","1"]
-  y["False Positives", "Logistic"] <- predict.logit.fulldata(input)["1","0"]
-  y["True Negatives", "Logistic"] <- predict.logit.fulldata(input)["0","0"]
-  y["False Negatives", "Logistic"] <- predict.logit.fulldata(input)["0","1"]  
   
-  y["True Positives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["1","1"]
-  y["False Positives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["1","0"]
-  y["True Negatives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["0","0"]
-  y["False Negatives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["0","1"] 
+  logit.TP <- predict.logit.fulldata(input)["1","1"]
+  logit.FP <- predict.logit.fulldata(input)["1","0"]
+  logit.TN <- predict.logit.fulldata(input)["0","0"]
+  logit.FN <- predict.logit.fulldata(input)["0","1"]  
   
-  y["True Positives", "Neural Networks"] <- predict.nnet.fulldata(input)["1","1"]
-  y["False Positives", "Neural Networks"] <- predict.nnet.fulldata(input)["1","0"]
-  y["True Negatives", "Neural Networks"] <- predict.nnet.fulldata(input)["0","0"]
-  y["False Negatives", "Neural Networks"] <- predict.nnet.fulldata(input)["0","1"] 
+  naivebayes.TP <- predict.naivebayes.fulldata(input)["1","1"]
+  naivebayes.FP <- predict.naivebayes.fulldata(input)["1","0"]
+  naivebayes.TN <- predict.naivebayes.fulldata(input)["0","0"]
+  naivebayes.FN <- predict.naivebayes.fulldata(input)["0","1"] 
   
-  y["True Positives", "SVM"] <- predict.svm.fulldata(input)["1","1"]
-  y["False Positives", "SVM"] <- predict.svm.fulldata(input)["1","0"]
-  y["True Negatives", "SVM"] <- predict.svm.fulldata(input)["0","0"]
-  y["False Negatives", "SVM"] <- predict.svm.fulldata(input)["0","1"]  
+  nnet.TP <- predict.nnet.fulldata(input)["1","1"]
+  nnet.FP <- predict.nnet.fulldata(input)["1","0"]
+  nnet.TN <- predict.nnet.fulldata(input)["0","0"]
+  nnet.FN <- predict.nnet.fulldata(input)["0","1"] 
+  
+  svm.TP <- predict.svm.fulldata(input)["1","1"]
+  svm.FP <- predict.svm.fulldata(input)["1","0"]
+  svm.TN <- predict.svm.fulldata(input)["0","0"]
+  svm.FN <- predict.svm.fulldata(input)["0","1"]
+  
+  y["Accuracy", "Logistic"] <- round( ((logit.TP + logit.TN) / (logit.TP + logit.FP + logit.TN + logit.FN)), digits = 3) 
+  y["True Positive Rate/Sensitivity", "Logistic"] <- round((logit.TP / (logit.TP+logit.FP)), digits = 3)
+  y["True Negative Rate/Specificity", "Logistic"] <- round((logit.TN / (logit.TN + logit.FN)), digits = 3)
+  
+  y["Accuracy", "Naive Bayes"] <- round( ((naivebayes.TP + naivebayes.TN) / (naivebayes.TP + naivebayes.FP + naivebayes.TN + naivebayes.FN)), digits = 3) 
+  y["True Positive Rate/Sensitivity", "Naive Bayes"] <- round((naivebayes.TP / (naivebayes.TP + naivebayes.FP)), digits = 3)
+  y["True Negative Rate/Specificity", "Naive Bayes"] <- round((naivebayes.TN / (naivebayes.TN + naivebayes.FN)), digits = 3)  
+
+  y["Accuracy", "Neural Networks"] <- round( ((nnet.TP + nnet.TN) / (nnet.TP + nnet.FP + nnet.TN + nnet.FN)), digits = 3) 
+  y["True Positive Rate/Sensitivity", "Neural Networks"] <- round((nnet.TP / (nnet.TP + nnet.FP)), digits = 3)
+  y["True Negative Rate/Specificity", "Neural Networks"] <- round((nnet.TN / (nnet.TN + nnet.FN)), digits = 3)  
+  
+  y["Accuracy", "SVM"] <- round( ((svm.TP + svm.TN) / (svm.TP + svm.FP + svm.TN + svm.FN)), digits = 3) 
+  y["True Positive Rate/Sensitivity", "SVM"] <- round((svm.TP / (svm.TP + svm.FP)), digits = 3)
+  y["True Negative Rate/Specificity", "SVM"] <- round((svm.TN / (svm.TN + svm.FN)), digits = 3)    
   
   y
 }
