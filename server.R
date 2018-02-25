@@ -188,7 +188,7 @@ function(input, output) {
   
   output$performanceTableDF <- DT::renderDataTable({
     DT::datatable(performanceTableGrid(), rownames = TRUE, 
-                  options = list(bLengthChange=0, bFilter=0),
+                  options = list(dom = 't'),
                   selection = c("none"))
   })
   #-----------------------------------------------------------------------------
