@@ -283,7 +283,7 @@ function(input, output) {
                h4("Step 6"),
                h5("Test the Model(s):"),
                tags$br(),
-               actionButton("actionValidate", label = "Test !", class = "btn-primary")
+               actionButton("actionTest", label = "Test !", class = "btn-primary")
         )
       ),
       fluidRow(
@@ -296,6 +296,10 @@ function(input, output) {
   })
   #-----------------------------------------------------------------------------
   #Model Prediction Tab
+  inputControls <- eventReactive(input$actionTrain,{
+    deriveInputControls(input)
+  })
+  
   output$modelprediction <- renderUI({
     fluidPage(
       # Application title
@@ -303,7 +307,7 @@ function(input, output) {
       sidebarLayout(
         # Sidebar with a slider input
         sidebarPanel(
-          deriveInputControls(input),
+          inputControls(),
           actionButton("actionPredict", label = "Predict Now ! ", class = "btn-primary")
         ),
         # Show a table of the predicted values
