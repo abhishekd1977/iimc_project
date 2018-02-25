@@ -269,9 +269,28 @@ perf_svm <- function(model, testData, dependentVar){
   performance(pred_svm,"tpr","fpr")
 }
 
-performanceTable <- function(modelPerformance){
+performanceTable <- function(input){
   y <- data.frame()
-  y["Accuracy", "Logistic"] <- 0.9
-  y["Error", "Logistic"] <- 0.08
+  y["True Positives", "Logistic"] <- predict.logit.fulldata(input)["1","1"]
+  y["False Positives", "Logistic"] <- predict.logit.fulldata(input)["1","0"]
+  y["True Negatives", "Logistic"] <- predict.logit.fulldata(input)["0","0"]
+  y["False Negatives", "Logistic"] <- predict.logit.fulldata(input)["0","1"]  
+  
+  y["True Positives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["1","1"]
+  y["False Positives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["1","0"]
+  y["True Negatives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["0","0"]
+  y["False Negatives", "Naive Bayes"] <- predict.naivebayes.fulldata(input)["0","1"] 
+  
+  y["True Positives", "Neural Networks"] <- predict.nnet.fulldata(input)["1","1"]
+  y["False Positives", "Neural Networks"] <- predict.nnet.fulldata(input)["1","0"]
+  y["True Negatives", "Neural Networks"] <- predict.nnet.fulldata(input)["0","0"]
+  y["False Negatives", "Neural Networks"] <- predict.nnet.fulldata(input)["0","1"] 
+  
+  y["True Positives", "SVM"] <- predict.svm.fulldata(input)["1","1"]
+  y["False Positives", "SVM"] <- predict.svm.fulldata(input)["1","0"]
+  y["True Negatives", "SVM"] <- predict.svm.fulldata(input)["0","0"]
+  y["False Negatives", "SVM"] <- predict.svm.fulldata(input)["0","1"]  
+  
+  y
 }
 ##--------------------------------Model Performance Ends--------------------
