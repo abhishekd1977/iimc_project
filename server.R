@@ -178,16 +178,15 @@ function(input, output) {
   })
   
   # Model Performance Comparison
-  performanceTable <- eventReactive(input$actionTrain,{
-    test_data <- getTestData(input)
-    dependentVar <- input$in2
-    
-    # Logistic Regression Performance
-    perf_logistic <- perf_logistic(logitModel(), test_data, dependentVar)
-    
-    
-    
-  })  
+  performanceTableGrid <- eventReactive(input$actionTrain,{
+    performanceTable(input)
+  })
+  
+  output$performanceTableDF <- DT::renderDataTable({
+    DT::datatable(performanceTableGrid(), rownames = TRUE, 
+                  options = list(bLengthChange=0, bFilter=0),
+                  selection = c("none"))
+  })
   #-----------------------------------------------------------------------------
   
   #Data Selection Tab
@@ -270,23 +269,24 @@ function(input, output) {
                # Horizontal line ----
                tags$br(),
                h4("Step 5"),
-               h5("Train the Model(s):"),
+               h5("Train & Validate the Model(s):"),
                tags$br(),
-               actionButton("actionTrain", label = "Train Now !", class = "btn-primary")
+               actionButton("actionTrain", label = "Train & Validate !", class = "btn-primary")
         ),
         column(4,
                # Horizontal line ----
                tags$br(),
                h4("Step 6"),
-               h5("Validate the Model(s):"),
+               h5("Test the Model(s):"),
                tags$br(),
-               actionButton("actionValidate", label = "Validate Now !", class = "btn-primary")
+               actionButton("actionValidate", label = "Test !", class = "btn-primary")
         )
       ),
       fluidRow(
         tags$hr(),
         h4("Model Summary"),
-        plotOutput("nPlotClassifierROC")
+        column(6, plotOutput("nPlotClassifierROC")),
+        column(6, DT::dataTableOutput("performanceTableDF"))
       )
     )
   })
