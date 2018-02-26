@@ -70,7 +70,10 @@ function(input, output) {
   
   #This shows all the contents(Train + Test) from the dataset
   output$contents <- DT::renderDataTable({
-      DT::datatable(selectData(input), selection = c("none"), options = list(pageLength = 5))
+      DT::datatable(selectData(input), 
+                    selection = c("none"), 
+                    options = list(pageLength = 5),
+                    style = 'bootstrap')
   })
   
   #This shows summary of all the contents(Train + Test) from the dataset
@@ -98,14 +101,16 @@ function(input, output) {
   output$nTextLogistic <- DT::renderDataTable({
     DT::datatable(logitModelCoeff(), rownames = TRUE, 
                   options = list(bLengthChange=0, bFilter=0),
-                  selection = c("none"))
+                  selection = c("none"),
+                  style = 'bootstrap')
   })
   
   #Confusion Matrix for Logistic
   output$logitTable <- DT::renderDataTable({
     DT::datatable(logitModelTable(), rownames = FALSE, 
                   options = list(dom = 't'),
-                  selection = c("none"))
+                  selection = c("none"),
+                  style = 'bootstrap')
   })
   ##-------------------------------------------------  
   naiveBayesModel <- eventReactive(input$actionTrain, {
@@ -120,7 +125,8 @@ function(input, output) {
   output$naiveBayesTable <- DT::renderDataTable({
     DT::datatable(naiveBayesModelTable(), rownames = FALSE, 
                   options = list(dom = 't'),
-                  selection = c("none"))
+                  selection = c("none"),
+                  style = 'bootstrap')
   })  
   ##---------------------------------------------------
   nnetModel <- eventReactive(input$actionTrain, {
@@ -135,7 +141,8 @@ function(input, output) {
   output$nnetTable <- DT::renderDataTable({
     DT::datatable(nnetModelTable(), rownames = FALSE, 
                   options = list(dom = 't'),
-                  selection = c("none"))
+                  selection = c("none"),
+                  style = 'bootstrap')
   })
   #-----------------------------------------------------------------------------
   svmModel <- eventReactive(input$actionTrain, {
@@ -150,7 +157,8 @@ function(input, output) {
   output$svmTable <- DT::renderDataTable({
     DT::datatable(svmModelTable(), rownames = FALSE, 
                   options = list(dom = 't'),
-                  selection = c("none"))
+                  selection = c("none"),
+                  style = 'bootstrap')
   })  
   #-----------------------------------------------------------------------------
   # ROC Curves
@@ -198,7 +206,8 @@ function(input, output) {
   output$performanceTableDF <- DT::renderDataTable({
     DT::datatable(performanceTableGrid(), rownames = TRUE, 
                   options = list(dom = 't'),
-                  selection = c("none"))
+                  selection = c("none"),
+                  style = 'bootstrap')
   })
   #-----------------------------------------------------------------------------
   
