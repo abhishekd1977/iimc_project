@@ -70,7 +70,7 @@ function(input, output) {
   
   #This shows all the contents(Train + Test) from the dataset
   output$contents <- DT::renderDataTable({
-      DT::datatable(selectData(input), selection = c("none"))
+      DT::datatable(selectData(input), selection = c("none"), options = list(pageLength = 5))
   })
   
   #This shows summary of all the contents(Train + Test) from the dataset
